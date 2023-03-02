@@ -73,16 +73,16 @@ export type Elements = ElementName[]
 
 export const getElementText = (element: ElementName) =>
 	element === 'light'
-		? 'text-yellow-100'
+		? 'bg-yellow-100 text-black'
 		: element === 'dark'
-		? 'text-purple-600'
+		? 'bg-purple-800 text-black'
 		: element === 'water'
-		? 'text-blue-500'
+		? 'bg-blue-500 text-black'
 		: element === 'fire'
-		? 'text-red-500'
+		? 'bg-red-500 text-black'
 		: element === 'nature'
-		? 'text-green-500'
-		: 'text-yellow-800'
+		? 'bg-green-500 text-black'
+		: 'bg-yellow-800 text-black'
 
 export const getElementStroke = (element: ElementName) =>
 	element === 'light'

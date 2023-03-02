@@ -53,24 +53,30 @@ function App() {
 		<Context.Provider value={{ elements, setElements, hovered, setHovered, range, setRange, support, setSupport }}>
 			{/* <Overlay /> */}
 			<div className="flex flex-col gap-4 pt-4 h-screen">
-				<div className="flex flex-row justify-between max-w-6xl container mx-auto">
-					<div>Picks Remaining: {11 - elements.length}</div>
-					<div>
-						<button
-							className={'rounded-sm bg-gray-200 text-black px-2 text-sm font-medium'}
-							onClick={() => setElements([])}
-						>
-							Reset
-						</button>
+				<div className="flex flex-row justify-between max-w-5xl container mx-auto border-b border-zinc-700 pb-4">
+					<div className="text-sm">Picks Remaining: {11 - elements.length}</div>
+
+					<div className="flex items-center gap-2">
+						{[...Array(11)].fill(null).map((_, i) => (
+							<div
+								key={i}
+								className={clsx(
+									'text-sm font-medium w-6 h-6 rounded-md flex items-center justify-center',
+									elements[i] ? getElementText(elements[i]) : 'bg-zinc-700'
+								)}
+							>
+								{i * 5}
+							</div>
+						))}
 					</div>
 				</div>
-				<div className="flex flex-row justify-between max-w-6xl container mx-auto">
-					<div className="flex gap-3">
-						<div>Range:</div>
+				<div className="flex flex-row justify-between max-w-5xl container mx-auto">
+					<div className="flex gap-3 items-center">
+						<div className="text-sm">Range:</div>
 						<button
 							className={twMerge(
 								clsx(
-									'rounded-sm bg-gray-200 text-black px-2 text-sm font-medium',
+									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
 									range === 750 && 'bg-red-500'
 								)
 							)}
@@ -81,7 +87,7 @@ function App() {
 						<button
 							className={twMerge(
 								clsx(
-									'rounded-sm bg-gray-200 text-black px-2 text-sm font-medium',
+									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
 									range === 900 && 'bg-red-500'
 								)
 							)}
@@ -92,7 +98,7 @@ function App() {
 						<button
 							className={twMerge(
 								clsx(
-									'rounded-sm bg-gray-200 text-black px-2 text-sm font-medium',
+									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
 									range === 1150 && 'bg-red-500'
 								)
 							)}
@@ -103,7 +109,7 @@ function App() {
 						<button
 							className={twMerge(
 								clsx(
-									'rounded-sm bg-gray-200 text-black px-2 text-sm font-medium',
+									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
 									range === 1500 && 'bg-red-500'
 								)
 							)}
@@ -113,12 +119,34 @@ function App() {
 						</button>
 					</div>
 
-					<div className="flex gap-3">
-						<div>Support:</div>
+					<div>
+						<button
+							className={'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium'}
+							onClick={() => setElements([])}
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								strokeWidth={1.5}
+								stroke="currentColor"
+								className="w-5 h-5"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+								/>
+							</svg>
+						</button>
+					</div>
+
+					<div className="flex gap-3 items-center">
+						<div className="text-sm">Support:</div>
 						<button
 							className={twMerge(
 								clsx(
-									'rounded-sm bg-gray-200 text-black px-2 text-sm font-medium',
+									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
 									support === 'buff' && 'bg-green-500'
 								)
 							)}
@@ -129,7 +157,7 @@ function App() {
 						<button
 							className={twMerge(
 								clsx(
-									'rounded-sm bg-gray-200 text-black px-2 text-sm font-medium',
+									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
 									support === 'slow' && 'bg-green-500'
 								)
 							)}
@@ -140,7 +168,7 @@ function App() {
 						<button
 							className={twMerge(
 								clsx(
-									'rounded-sm bg-gray-200 text-black px-2 text-sm font-medium',
+									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
 									support === 'amplify' && 'bg-green-500'
 								)
 							)}
@@ -157,13 +185,6 @@ function App() {
 						<SectionRow getTowers={(element) => towers[element].filter((x) => x.elements.length === 2)} />
 						<SectionRow getTowers={(element) => towers[element].filter((x) => x.elements.length === 3)} />
 						<SectionRow getTowers={(element) => towers[element].filter((x) => x.elements.length === 4)} />
-					</div>
-					<div>
-						{elements.map((x, i) => (
-							<div key={i} className="text-sm font-medium">
-								{i * 5}: <span className={getElementText(x)}>{x}</span>
-							</div>
-						))}
 					</div>
 				</div>
 			</div>
@@ -308,7 +329,7 @@ const SectionRow = ({ getTowers }: { getTowers: (element: ElementName) => Tower[
 			{(Object.keys(towers) as ElementName[]).map((element) => (
 				<div
 					key={element}
-					className={`flex flex-row items-start flex-wrap justify-center content-start gap-4 w-48 p-4 ${getBackgroundColor(
+					className={`flex flex-row items-start flex-wrap justify-center content-start gap-4 w-44 py-4 px-0 ${getBackgroundColor(
 						element
 					)}`}
 				>
