@@ -73,16 +73,16 @@ export type Elements = ElementName[]
 
 export const getElementColor = (element: ElementName) =>
 	element === 'light'
-		? 'bg-yellow-100'
+		? 'stroke-yellow-100'
 		: element === 'dark'
-		? 'bg-purple-800'
+		? 'stroke-purple-800'
 		: element === 'water'
-		? 'bg-blue-500'
+		? 'stroke-blue-500'
 		: element === 'fire'
-		? 'bg-red-500'
+		? 'stroke-red-500'
 		: element === 'nature'
-		? 'bg-green-500'
-		: 'bg-yellow-800'
+		? 'stroke-green-500'
+		: 'stroke-yellow-800'
 
 export const getBackgroundColor = (element: ElementName) =>
 	element === 'light'

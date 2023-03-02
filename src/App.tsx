@@ -5,6 +5,7 @@ import {
 	ElementName,
 	elementNames,
 	getBackgroundColor,
+	getElementColor,
 	getTowerParents,
 	Range,
 	Support,
@@ -296,9 +297,10 @@ type Line = {
 	x2: number
 	y2: number
 	depth: number
+	color: string
 }
 
-const createLine = (el1: HTMLImageElement, el2: HTMLImageElement, depth: number) => {
+const createLine = (el1: HTMLImageElement, el2: HTMLImageElement, depth: number, color: string) => {
 	let rect1 = el1.getBoundingClientRect()
 	let rect2 = el2.getBoundingClientRect()
 
@@ -308,6 +310,7 @@ const createLine = (el1: HTMLImageElement, el2: HTMLImageElement, depth: number)
 		x2: rect2.x + rect2.width / 2,
 		y2: rect2.y + rect2.height / 2,
 		depth,
+		color,
 	}
 }
 
@@ -320,7 +323,7 @@ const Overlay = () => {
 		let parentEls = parents.map((x) => document.querySelector(`[data-tower="${x.name}"]`) as HTMLImageElement)
 
 		for (let i = 0; i < parentEls.filter(Boolean).length; i++) {
-			const line = createLine(el, parentEls[i], depth)
+			const line = createLine(el, parentEls[i], depth, getElementColor(parents[i].elements[0]))
 
 			if (!lines.find((x) => x.x1 === line.x1 && x.x2 === line.x2 && x.y1 === line.y1 && x.y2 === line.y2)) {
 				lines.push(line)
@@ -364,9 +367,10 @@ const Overlay = () => {
 					x2={line.x2}
 					y1={line.y1}
 					y2={line.y2}
-					// strokeWidth={4 - line.depth}
-					style={{ opacity: 1 - line.depth * 0.33 }}
-					stroke="white"
+					className={line.color}
+					strokeWidth={3}
+					// style={{ opacity: 1 - line.depth * 0.33 }}
+					// stroke="white"
 					strokeLinecap="round"
 					strokeLinejoin="round"
 				/>
