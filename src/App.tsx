@@ -1,5 +1,16 @@
-import { createContext, useContext, useState } from 'react'
-import { ElementName, elementNames, getBackgroundColor, getTowerParents, Range, Support, Tower, towers } from './data'
+import { createContext, useContext, useEffect, useState } from 'react'
+import {
+	convertElementNameToSymbols,
+	convertSymbolToElementName,
+	ElementName,
+	elementNames,
+	getBackgroundColor,
+	getTowerParents,
+	Range,
+	Support,
+	Tower,
+	towers,
+} from './data'
 import clsx from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
@@ -19,10 +30,16 @@ type ContextType = {
 const Context = createContext({} as ContextType)
 
 function App() {
-	const [elements, setElements] = useState<ElementName[]>([])
+	const [elements, setElements] = useState<ElementName[]>(
+		location.hash.split('').map(convertSymbolToElementName).filter(isNotNull)
+	)
 	const [hovered, setHovered] = useState<Tower | null>(null)
 	const [range, setRange] = useState<Range | null>(null)
 	const [support, setSupport] = useState<Support | null>(null)
+
+	useEffect(() => {
+		location.hash = elements.map(convertElementNameToSymbols).join('')
+	}, [elements])
 
 	return (
 		<Context.Provider value={{ elements, setElements, hovered, setHovered, range, setRange, support, setSupport }}>

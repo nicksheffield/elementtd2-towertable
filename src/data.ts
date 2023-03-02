@@ -479,3 +479,21 @@ export const getTowerParents = (tower: Tower) => {
 		.filter((x) => x.elements.length === tower.elements.length - 1)
 		.filter((x) => x.elements.reduce((pass, el) => pass && tower.elements.includes(el), true))
 }
+
+export const convertElementNameToSymbols = (x: ElementName) =>
+	x === 'dark' ? 'd' : x === 'earth' ? 'e' : x === 'fire' ? 'f' : x === 'light' ? 'l' : x === 'nature' ? 'n' : 'w'
+
+export const convertSymbolToElementName = (x: string): ElementName | null =>
+	x === 'd'
+		? 'dark'
+		: x === 'e'
+		? 'earth'
+		: x === 'f'
+		? 'fire'
+		: x === 'l'
+		? 'light'
+		: x === 'n'
+		? 'nature'
+		: x === 'w'
+		? 'water'
+		: null
