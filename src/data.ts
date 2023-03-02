@@ -123,7 +123,7 @@ export const towers: Record<ElementName, Tower[]> = {
 			name: 'Lightning',
 			elements: ['light', 'fire'],
 			image: LightningTower,
-			range: 900,
+			range: 1150,
 		},
 		{
 			name: 'Trickery',
@@ -215,7 +215,7 @@ export const towers: Record<ElementName, Tower[]> = {
 			name: 'Doom',
 			elements: ['dark', 'fire', 'nature', 'earth'],
 			image: DoomTower,
-			range: 900,
+			range: 750,
 		},
 		{
 			name: 'Phantom Zone',
@@ -462,7 +462,7 @@ export const towers: Record<ElementName, Tower[]> = {
 			name: 'Nuclear',
 			elements: ['earth', 'light', 'dark', 'nature'],
 			image: NuclearReactorTower,
-			range: 900,
+			range: 750,
 		},
 		{
 			name: 'Gravity Cannon',
