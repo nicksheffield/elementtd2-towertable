@@ -17,6 +17,12 @@ import { twMerge } from 'tailwind-merge'
 
 const isNotNull = <T,>(x: T | null): x is T => x !== null
 
+const arrIsSame = (a: unknown[], b: unknown[]) => a.length === b.length && a.every((v) => b.includes(v))
+
+const isUnlocked = (tower: Tower, elements: ElementName[]) => {
+	return tower.elements.every((el) => elements.includes(el))
+}
+
 type ContextType = {
 	elements: ElementName[]
 	setElements: React.Dispatch<React.SetStateAction<ElementName[]>>
@@ -44,7 +50,7 @@ function App() {
 
 	return (
 		<Context.Provider value={{ elements, setElements, hovered, setHovered, range, setRange, support, setSupport }}>
-			<Overlay />
+			{/* <Overlay /> */}
 			<div className="flex flex-col gap-4 pt-4 h-screen">
 				<div className="flex flex-row justify-between max-w-6xl container mx-auto">
 					<div>Picks Remaining: {11 - elements.length}</div>
@@ -167,6 +173,14 @@ function App() {
 	)
 }
 
+const shouldGlow = (hovered: Tower | null, tower: Tower) => {
+	if (hovered === null) return false
+	return (
+		hovered.elements.reduce((acc, cur) => acc && tower.elements.includes(cur), true) ||
+		tower.elements.reduce((acc, cur) => acc && hovered.elements.includes(cur), true)
+	)
+}
+
 const TowerSelector = ({ tower }: { tower: Tower }) => {
 	const { elements, setElements, hovered, setHovered, range, support } = useContext(Context)
 
@@ -214,14 +228,23 @@ const TowerSelector = ({ tower }: { tower: Tower }) => {
 				return [...e.slice(0, lastIndex), ...e.slice(lastIndex + 1)]
 			})
 		} else {
-			setElements((e) => {
-				let clone = [...e]
-				tower.elements.forEach((x) => {
-					clone.splice(clone.lastIndexOf(x), 1)
-				})
-
-				return clone
-			})
+			// setElements((e) => {
+			// 	let clone = [...e]
+			// 	tower.elements.forEach((x) => {
+			// 		clone.splice(clone.lastIndexOf(x), 1)
+			// 	})
+			// 	return clone
+			// })
+			const activeTowers = Object.values(towers)
+				.flat()
+				.reduce<Tower[]>((list, t) => {
+					if (t === tower) return list
+					if (t.elements.reduce((acc, cur) => acc && elements.includes(cur), true)) {
+						return [...list, t]
+					}
+					return list
+				}, [])
+			console.log('activeTowers', activeTowers)
 		}
 	}
 
@@ -238,25 +261,20 @@ const TowerSelector = ({ tower }: { tower: Tower }) => {
 			<div
 				className={twMerge(
 					clsx(
-						tower.range === range && 'ring-4 ring-red-500',
-						tower.support === support && 'ring-4 ring-green-500',
-						tower.range === range &&
-							tower.support === support &&
-							'ring-4 ring-offset-4 ring-red-500 ring-offset-green-500',
-						tower.elements.length === 1 ? 'rounded-full' : 'border-4 border-black'
-						// tower.elements.length === 1 &&
-						// 	hovered &&
-						// 	hovered !== tower &&
-						// 	hovered.elements.includes(tower.elements[0]) &&
-						// 	'ring-4 ring-white'
+						tower.elements.length === 1 ? 'rounded-full' : 'border-4 border-black',
+						tower.range === range && 'border-red-500',
+						tower.support === support && 'border-green-500',
+						tower.range === range && tower.support === support && 'ring-4 ring-red-500 border-green-500',
+						shouldGlow(hovered, tower) && tower !== hovered && 'glow',
+						hovered &&
+							hovered.elements.length === 1 &&
+							isUnlocked(tower, [...elements, hovered.elements[0]]) &&
+							!isUnlocked(tower, elements) &&
+							'border-white'
 					)
 				)}
 			>
-				<img
-					className={`${!isActive && tower.elements.length !== 1 ? 'saturate-0 opacity-30' : ''}`}
-					src={tower.image}
-					data-tower={tower.name}
-				/>
+				<img className={clsx(!isActive && 'saturate-0 opacity-30')} src={tower.image} data-tower={tower.name} />
 			</div>
 			<div className="absolute bottom-0 left-0 w-full flex justify-center text-3xl font-bold text-white">
 				<div
