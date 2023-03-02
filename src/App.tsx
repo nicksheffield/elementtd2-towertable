@@ -5,7 +5,8 @@ import {
 	ElementName,
 	elementNames,
 	getBackgroundColor,
-	getElementColor,
+	getElementStroke,
+	getElementText,
 	getTowerParents,
 	Range,
 	Support,
@@ -151,21 +152,18 @@ function App() {
 				</div>
 
 				<div className="flex flex-row justify-center flex-start h-full gap-8">
+					<div className="grid grid-cols-6">
+						<SectionRow getTowers={(element) => towers[element].filter((x) => x.elements.length === 1)} />
+						<SectionRow getTowers={(element) => towers[element].filter((x) => x.elements.length === 2)} />
+						<SectionRow getTowers={(element) => towers[element].filter((x) => x.elements.length === 3)} />
+						<SectionRow getTowers={(element) => towers[element].filter((x) => x.elements.length === 4)} />
+					</div>
 					<div>
-						<div className="grid grid-cols-6">
-							<SectionRow
-								getTowers={(element) => towers[element].filter((x) => x.elements.length === 1)}
-							/>
-							<SectionRow
-								getTowers={(element) => towers[element].filter((x) => x.elements.length === 2)}
-							/>
-							<SectionRow
-								getTowers={(element) => towers[element].filter((x) => x.elements.length === 3)}
-							/>
-							<SectionRow
-								getTowers={(element) => towers[element].filter((x) => x.elements.length === 4)}
-							/>
-						</div>
+						{elements.map((x, i) => (
+							<div key={i} className="text-sm font-medium">
+								{i * 5}: <span className={getElementText(x)}>{x}</span>
+							</div>
+						))}
 					</div>
 				</div>
 			</div>
@@ -248,9 +246,11 @@ const TowerSelector = ({ tower }: { tower: Tower }) => {
 		}
 	}
 
+	const willAdd = hovered && isUnlocked(tower, [...elements, ...hovered.elements]) && !isUnlocked(tower, elements)
+
 	return (
 		<div
-			className="relative flex flex-col items-center w-16 select-none transition-transform scale-100 hover:scale-105 cursor-pointer"
+			className="flex flex-col items-center w-16 select-none transition-transform scale-100 hover:scale-105 cursor-pointer"
 			onClick={increase}
 			onContextMenu={decrease}
 			onMouseOver={() => setHovered(tower)}
@@ -261,29 +261,41 @@ const TowerSelector = ({ tower }: { tower: Tower }) => {
 			<div
 				className={twMerge(
 					clsx(
+						'relative',
 						tower.elements.length === 1 ? 'rounded-full' : 'border-4 border-black',
 						tower.range === range && 'border-red-500',
 						tower.support === support && 'border-green-500',
 						tower.range === range && tower.support === support && 'ring-4 ring-red-500 border-green-500',
 						shouldGlow(hovered, tower) && tower !== hovered && 'glow',
-						hovered &&
-							hovered.elements.length === 1 &&
-							isUnlocked(tower, [...elements, hovered.elements[0]]) &&
-							!isUnlocked(tower, elements) &&
-							'border-white'
+						willAdd && 'border-white'
 					)
 				)}
 			>
 				<img className={clsx(!isActive && 'saturate-0 opacity-30')} src={tower.image} data-tower={tower.name} />
-			</div>
-			<div className="absolute bottom-0 left-0 w-full flex justify-center text-3xl font-bold text-white">
-				<div
-					style={{
-						textShadow:
-							'-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000',
-					}}
-				>
-					{correctLevel(level) || ''}
+
+				{willAdd && (
+					<div className="absolute inset-0 flex justify-center items-center text-3xl font-bold text-white">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							strokeWidth={1.5}
+							stroke="currentColor"
+							className="w-6 h-6"
+						>
+							<path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+						</svg>
+					</div>
+				)}
+				<div className="absolute bottom-0 left-0 w-full flex justify-center text-3xl font-bold text-white">
+					<div
+						style={{
+							textShadow:
+								'-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000',
+						}}
+					>
+						{correctLevel(level) || ''}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -341,7 +353,7 @@ const Overlay = () => {
 		let parentEls = parents.map((x) => document.querySelector(`[data-tower="${x.name}"]`) as HTMLImageElement)
 
 		for (let i = 0; i < parentEls.filter(Boolean).length; i++) {
-			const line = createLine(el, parentEls[i], depth, getElementColor(parents[i].elements[0]))
+			const line = createLine(el, parentEls[i], depth, getElementStroke(parents[i].elements[0]))
 
 			if (!lines.find((x) => x.x1 === line.x1 && x.x2 === line.x2 && x.y1 === line.y1 && x.y2 === line.y2)) {
 				lines.push(line)

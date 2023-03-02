@@ -71,7 +71,20 @@ export const supports: Support[] = ['buff', 'slow', 'amplify']
 
 export type Elements = ElementName[]
 
-export const getElementColor = (element: ElementName) =>
+export const getElementText = (element: ElementName) =>
+	element === 'light'
+		? 'text-yellow-100'
+		: element === 'dark'
+		? 'text-purple-600'
+		: element === 'water'
+		? 'text-blue-500'
+		: element === 'fire'
+		? 'text-red-500'
+		: element === 'nature'
+		? 'text-green-500'
+		: 'text-yellow-800'
+
+export const getElementStroke = (element: ElementName) =>
 	element === 'light'
 		? 'stroke-yellow-100'
 		: element === 'dark'
