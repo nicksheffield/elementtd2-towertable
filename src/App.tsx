@@ -41,6 +41,9 @@ function App() {
 	const [elements, setElements] = useState<ElementName[]>(
 		location.hash.split('').map(convertSymbolToElementName).filter(isNotNull)
 	)
+
+	const [fakeElements, setFakeElements] = useState<ElementName[]>([])
+
 	const [hovered, setHovered] = useState<Tower | null>(null)
 	const [range, setRange] = useState<Range | null>(null)
 	const [support, setSupport] = useState<Support | null>(null)
@@ -50,20 +53,37 @@ function App() {
 	}, [elements])
 
 	return (
-		<Context.Provider value={{ elements, setElements, hovered, setHovered, range, setRange, support, setSupport }}>
+		<Context.Provider
+			value={{
+				elements: fakeElements.length ? fakeElements : elements,
+				setElements,
+				hovered,
+				setHovered,
+				range,
+				setRange,
+				support,
+				setSupport,
+			}}
+		>
 			{/* <Overlay /> */}
 			<div className="flex flex-col gap-4 pt-4 h-screen">
 				<div className="flex flex-row justify-between max-w-5xl container mx-auto border-b border-zinc-700 pb-4">
 					<div className="text-sm">Picks Remaining: {11 - elements.length}</div>
 
-					<div className="flex items-center gap-2">
+					<div className="flex items-center">
 						{[...Array(11)].fill(null).map((_, i) => (
 							<div
 								key={i}
 								className={clsx(
-									'text-sm font-medium w-6 h-6 rounded-md flex items-center justify-center',
-									elements[i] ? getElementText(elements[i]) : 'bg-zinc-700'
+									'relative text-sm font-medium w-8 h-6 flex items-center justify-center select-none',
+									elements[i] ? getElementText(elements[i]) : 'bg-zinc-700',
+									i === 0 && 'rounded-l-md',
+									i === 10 && 'rounded-r-md',
+									fakeElements.length && fakeElements.length === i + 1 && 'ring-2 ring-white z-10',
+									fakeElements.length && fakeElements.length < i + 1 && 'opacity-25'
 								)}
+								onMouseOver={() => setFakeElements(elements.slice(0, i + 1))}
+								onMouseOut={() => setFakeElements([])}
 							>
 								{i * 5}
 							</div>
