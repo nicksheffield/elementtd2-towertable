@@ -67,7 +67,7 @@ function App() {
 		>
 			{/* <Overlay /> */}
 			<div className="flex flex-col gap-4 pt-4 h-screen">
-				<div className="flex flex-row justify-between max-w-5xl container mx-auto border-b border-zinc-700 pb-4">
+				<div className="flex flex-row items-center justify-between max-w-5xl container mx-auto border-b border-zinc-700 pb-4">
 					<div className="text-sm">Picks Remaining: {11 - elements.length}</div>
 
 					<div className="flex items-center">
@@ -199,7 +199,7 @@ function App() {
 					</div>
 				</div>
 
-				<div className="flex flex-row justify-center flex-start h-full gap-8">
+				<div className="flex flex-row justify-center flex-start">
 					<div className="grid grid-cols-6">
 						<SectionRow getTowers={(element) => towers[element].filter((x) => x.elements.length === 1)} />
 						<SectionRow getTowers={(element) => towers[element].filter((x) => x.elements.length === 2)} />
