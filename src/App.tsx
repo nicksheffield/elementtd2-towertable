@@ -9,7 +9,9 @@ import {
 	getElementText,
 	getTowerParents,
 	Range,
+	ranges,
 	Support,
+	supports,
 	Tower,
 	towers,
 } from './data'
@@ -37,6 +39,11 @@ type ContextType = {
 
 const Context = createContext({} as ContextType)
 
+const picksCount = 11 // 11 is always the max
+const arrPicks = Array.from({ length: picksCount })
+
+const selectionRows = Array.from({ length: 4 })
+
 function App() {
 	const [elements, setElements] = useState<ElementName[]>(
 		location.hash.split('').map(convertSymbolToElementName).filter(isNotNull)
@@ -47,6 +54,8 @@ function App() {
 	const [hovered, setHovered] = useState<Tower | null>(null)
 	const [range, setRange] = useState<Range | null>(null)
 	const [support, setSupport] = useState<Support | null>(null)
+
+	const [showOverlay, setShowOverlay] = useState(false)
 
 	useEffect(() => {
 		location.hash = elements.map(convertElementNameToSymbols).join('')
@@ -65,146 +74,124 @@ function App() {
 				setSupport,
 			}}
 		>
-			{/* <Overlay /> */}
-			<div className="flex flex-col gap-4 pt-4 h-screen">
-				<div className="flex flex-row items-center justify-between max-w-5xl container mx-auto border-b border-zinc-700 pb-4">
-					<div className="text-sm">Picks Remaining: {11 - elements.length}</div>
+			{showOverlay && <Overlay />}
 
-					<div className="flex items-center">
-						{[...Array(11)].fill(null).map((_, i) => (
-							<div
-								key={i}
-								className={clsx(
-									'relative text-sm font-medium w-8 h-6 flex items-center justify-center select-none',
-									elements[i] ? getElementText(elements[i]) : 'bg-zinc-700',
-									i === 0 && 'rounded-l-md',
-									i === 10 && 'rounded-r-md',
-									fakeElements.length && fakeElements.length === i + 1 && 'ring-2 ring-white z-10',
-									fakeElements.length && fakeElements.length < i + 1 && 'opacity-25'
-								)}
-								onMouseOver={() => setFakeElements(elements.slice(0, i + 1))}
-								onMouseOut={() => setFakeElements([])}
-							>
-								{i * 5}
-							</div>
-						))}
-					</div>
-				</div>
-				<div className="flex flex-row justify-between max-w-5xl container mx-auto">
-					<div className="flex gap-3 items-center">
-						<div className="text-sm">Range:</div>
-						<button
-							className={twMerge(
-								clsx(
-									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
-									range === 750 && 'bg-red-500'
-								)
-							)}
-							onClick={() => setRange((r) => (r !== 750 ? 750 : null))}
-						>
-							750
-						</button>
-						<button
-							className={twMerge(
-								clsx(
-									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
-									range === 900 && 'bg-red-500'
-								)
-							)}
-							onClick={() => setRange((r) => (r !== 900 ? 900 : null))}
-						>
-							900
-						</button>
-						<button
-							className={twMerge(
-								clsx(
-									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
-									range === 1150 && 'bg-red-500'
-								)
-							)}
-							onClick={() => setRange((r) => (r !== 1150 ? 1150 : null))}
-						>
-							1150
-						</button>
-						<button
-							className={twMerge(
-								clsx(
-									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
-									range === 1500 && 'bg-red-500'
-								)
-							)}
-							onClick={() => setRange((r) => (r !== 1500 ? 1500 : null))}
-						>
-							1500
-						</button>
+			<div className="flex flex-row justify-center">
+				<div className="flex flex-col gap-4 pt-4 h-screen max-w-max">
+					<div className="flex flex-row items-center justify-between border-b border-zinc-700 pb-4">
+						<div className="text-sm">Picks Remaining: {picksCount - elements.length}</div>
+
+						<div className="flex items-center">
+							{arrPicks.map((_, i) => (
+								<div
+									key={i}
+									className={clsx(
+										'relative text-sm font-medium w-8 h-6 flex items-center justify-center select-none',
+										elements[i] ? getElementText(elements[i]) : 'bg-zinc-700',
+										i === 0 && 'rounded-l-md',
+										i === picksCount - 1 && 'rounded-r-md',
+										fakeElements.length &&
+											fakeElements.length === i + 1 &&
+											'ring-2 ring-white z-10',
+										fakeElements.length && fakeElements.length < i + 1 && 'opacity-25'
+									)}
+									onMouseOver={() => setFakeElements(elements.slice(0, i + 1))}
+									onMouseOut={() => setFakeElements([])}
+								>
+									{i * 5}
+								</div>
+							))}
+						</div>
 					</div>
 
-					<div>
-						<button
-							className={'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium'}
-							onClick={() => setElements([])}
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								strokeWidth={1.5}
-								stroke="currentColor"
-								className="w-5 h-5"
+					<div className="flex flex-row justify-between">
+						<div className="flex gap-3 items-center">
+							<div className="text-sm">Range:</div>
+
+							{ranges.map((x) => (
+								<button
+									className={twMerge(
+										clsx(
+											'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
+											x === range && 'bg-red-500'
+										)
+									)}
+									onClick={() => setRange((r) => (r !== x ? x : null))}
+								>
+									{x}
+								</button>
+							))}
+						</div>
+
+						<div>
+							<button
+								className={
+									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium'
+								}
+								onClick={() => setElements([])}
 							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									strokeWidth={1.5}
+									stroke="currentColor"
+									className="w-5 h-5"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+									/>
+								</svg>
+							</button>
+						</div>
+
+						<div className="flex gap-3 items-center">
+							<div className="text-sm">Support:</div>
+
+							{supports.map((x) => (
+								<button
+									className={twMerge(
+										clsx(
+											'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
+											support === x && 'bg-green-500'
+										)
+									)}
+									onClick={() => setSupport((r) => (r !== x ? x : null))}
+								>
+									{x}
+								</button>
+							))}
+						</div>
+					</div>
+
+					<div className="flex flex-row justify-center flex-start">
+						<div className="grid grid-cols-6">
+							{selectionRows.map((_, i) => (
+								<SectionRow
+									getTowers={(element) => towers[element].filter((x) => x.elements.length === i + 1)}
 								/>
-							</svg>
-						</button>
+							))}
+						</div>
 					</div>
 
-					<div className="flex gap-3 items-center">
-						<div className="text-sm">Support:</div>
-						<button
-							className={twMerge(
-								clsx(
-									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
-									support === 'buff' && 'bg-green-500'
-								)
-							)}
-							onClick={() => setSupport((r) => (r !== 'buff' ? 'buff' : null))}
-						>
-							Buff
-						</button>
-						<button
-							className={twMerge(
-								clsx(
-									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
-									support === 'slow' && 'bg-green-500'
-								)
-							)}
-							onClick={() => setSupport((r) => (r !== 'slow' ? 'slow' : null))}
-						>
-							Slow
-						</button>
-						<button
-							className={twMerge(
-								clsx(
-									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
-									support === 'amplify' && 'bg-green-500'
-								)
-							)}
-							onClick={() => setSupport((r) => (r !== 'amplify' ? 'amplify' : null))}
-						>
-							Amplify
-						</button>
-					</div>
-				</div>
-
-				<div className="flex flex-row justify-center flex-start">
-					<div className="grid grid-cols-6">
-						<SectionRow getTowers={(element) => towers[element].filter((x) => x.elements.length === 1)} />
-						<SectionRow getTowers={(element) => towers[element].filter((x) => x.elements.length === 2)} />
-						<SectionRow getTowers={(element) => towers[element].filter((x) => x.elements.length === 3)} />
-						<SectionRow getTowers={(element) => towers[element].filter((x) => x.elements.length === 4)} />
+					<div className="flex items-center justify-between">
+						<div className="text-sm font-medium">
+							Built by{' '}
+							<a
+								href="https://nicksheffield.com"
+								target="_blank"
+								rel="noreferrer"
+								className="text-red-500"
+							>
+								Nick
+							</a>
+						</div>
+						<label className="text-sm font-medium flex items-center gap-2">
+							<input type="checkbox" checked={showOverlay} onChange={() => setShowOverlay((x) => !x)} />
+							Explain prerequisites on hover
+						</label>
 					</div>
 				</div>
 			</div>
@@ -214,9 +201,10 @@ function App() {
 
 const shouldGlow = (hovered: Tower | null, tower: Tower) => {
 	if (hovered === null) return false
+
 	return (
-		hovered.elements.reduce((acc, cur) => acc && tower.elements.includes(cur), true) ||
-		tower.elements.reduce((acc, cur) => acc && hovered.elements.includes(cur), true)
+		hovered.elements.some((x) => tower.elements.includes(x)) ||
+		tower.elements.some((x) => hovered.elements.includes(x))
 	)
 }
 
@@ -233,7 +221,7 @@ const TowerSelector = ({ tower }: { tower: Tower }) => {
 
 	const increase = () => {
 		if (tower.elements.length === 1) {
-			if (elements.length >= 11) return
+			if (elements.length >= picksCount) return
 			if (elements.filter((x) => x === tower.elements[0]).length >= 3) return
 			setElements((e) => [...e, tower.elements[0]])
 		} else {
@@ -252,7 +240,7 @@ const TowerSelector = ({ tower }: { tower: Tower }) => {
 				}
 			})
 
-			if (elements.length + elementsToAdd.length > 11) return
+			if (elements.length + elementsToAdd.length > picksCount) return
 			setElements((e) => [...e, ...elementsToAdd])
 		}
 	}
@@ -267,13 +255,6 @@ const TowerSelector = ({ tower }: { tower: Tower }) => {
 				return [...e.slice(0, lastIndex), ...e.slice(lastIndex + 1)]
 			})
 		} else {
-			// setElements((e) => {
-			// 	let clone = [...e]
-			// 	tower.elements.forEach((x) => {
-			// 		clone.splice(clone.lastIndexOf(x), 1)
-			// 	})
-			// 	return clone
-			// })
 			const activeTowers = Object.values(towers)
 				.flat()
 				.reduce<Tower[]>((list, t) => {
@@ -298,7 +279,7 @@ const TowerSelector = ({ tower }: { tower: Tower }) => {
 			onMouseOut={() => setHovered(null)}
 		>
 			<div className="text-xs font-medium whitespace-nowrap">{tower.name}</div>
-			{/* {elements.filter((x) => x === element).length || ''} */}
+
 			<div
 				className={twMerge(
 					clsx(
@@ -328,6 +309,7 @@ const TowerSelector = ({ tower }: { tower: Tower }) => {
 						</svg>
 					</div>
 				)}
+
 				<div className="absolute bottom-0 left-0 w-full flex justify-center text-3xl font-bold text-white">
 					<div
 						style={{

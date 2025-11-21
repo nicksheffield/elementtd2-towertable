@@ -60,14 +60,14 @@ import ShredderTower from './assets/earth/Shredder_Tower.webp'
 import NuclearReactorTower from './assets/earth/NuclearReactor_Tower.webp'
 import GravityCannonTower from './assets/earth/GravityCannon_Tower.webp'
 
-export type ElementName = 'light' | 'dark' | 'water' | 'fire' | 'nature' | 'earth'
-export const elementNames: ElementName[] = ['light', 'dark', 'water', 'fire', 'nature', 'earth']
+export const elementNames = ['light', 'dark', 'water', 'fire', 'nature', 'earth'] as const
+export type ElementName = (typeof elementNames)[number]
 
-export type Range = 750 | 900 | 1150 | 1500
-export const ranges: Range[] = [750, 900, 1150, 1500]
+export const ranges = [750, 900, 1150, 1500] as const
+export type Range = (typeof ranges)[number]
 
-export type Support = 'buff' | 'slow' | 'amplify'
-export const supports: Support[] = ['buff', 'slow', 'amplify']
+export const supports = ['buff', 'slow', 'amplify'] as const
+export type Support = (typeof supports)[number]
 
 export type Elements = ElementName[]
 
