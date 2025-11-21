@@ -1,52 +1,38 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { ThemeToggle } from '@/components/ThemeToggle'
+import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { RefreshCwIcon } from 'lucide-react'
+import { Context } from '@/lib/Context'
+import { cn, isNotNull } from '@/lib/utils'
+import { picksCount } from '@/lib/constants'
+import { Overlay } from '@/components/Overlay'
+import { SectionRow } from '@/components/SectionRow'
 import {
 	convertElementNameToSymbols,
 	convertSymbolToElementName,
-	ElementName,
-	elementNames,
-	getBackgroundColor,
-	getElementStroke,
+	type ElementName,
 	getElementText,
-	getTowerParents,
-	Range,
+	type Range,
 	ranges,
-	Support,
+	type Support,
 	supports,
-	Tower,
+	type Tower,
 	towers,
-} from './data'
-import clsx from 'clsx'
-import { twMerge } from 'tailwind-merge'
+} from '@/lib/data'
+import { ButtonGroup } from '@/components/ui/button-group'
 
-const isNotNull = <T,>(x: T | null): x is T => x !== null
-
-const arrIsSame = (a: unknown[], b: unknown[]) => a.length === b.length && a.every((v) => b.includes(v))
-
-const isUnlocked = (tower: Tower, elements: ElementName[]) => {
-	return tower.elements.every((el) => elements.includes(el))
-}
-
-type ContextType = {
-	elements: ElementName[]
-	setElements: React.Dispatch<React.SetStateAction<ElementName[]>>
-	hovered: Tower | null
-	setHovered: React.Dispatch<React.SetStateAction<Tower | null>>
-	range: Range | null
-	setRange: React.Dispatch<React.SetStateAction<Range | null>>
-	support: Support | null
-	setSupport: React.Dispatch<React.SetStateAction<Support | null>>
-}
-
-const Context = createContext({} as ContextType)
-
-const picksCount = 11 // 11 is always the max
 const arrPicks = Array.from({ length: picksCount })
 
 const selectionRows = Array.from({ length: 4 })
 
-function App() {
+export const App = () => {
 	const [elements, setElements] = useState<ElementName[]>(
-		location.hash.split('').map(convertSymbolToElementName).filter(isNotNull)
+		location.hash
+			.split('')
+			.map(convertSymbolToElementName)
+			.filter(isNotNull)
 	)
 
 	const [fakeElements, setFakeElements] = useState<ElementName[]>([])
@@ -78,91 +64,115 @@ function App() {
 
 			<div className="flex flex-row justify-center">
 				<div className="flex flex-col gap-4 pt-4 h-screen max-w-max">
-					<div className="flex flex-row items-center justify-between border-b border-zinc-700 pb-4">
-						<div className="text-sm">Picks Remaining: {picksCount - elements.length}</div>
+					<div className="flex flex-row justify-between items-center">
+						<div className="text-2xl font-semibold">
+							<a
+								href="https://store.steampowered.com/app/1018830/Element_TD_2__Tower_Defense/"
+								target="_blank"
+								rel="noreferrer"
+								className="underline-offset-4 underline hover:text-indigo-400 "
+							>
+								Element TD 2
+							</a>{' '}
+							Tower Table
+						</div>
+						<div className="flex items-center gap-4">
+							<Button
+								variant="secondary"
+								onClick={() => setElements([])}
+							>
+								<RefreshCwIcon />
+								Reset
+							</Button>
 
-						<div className="flex items-center">
-							{arrPicks.map((_, i) => (
-								<div
-									key={i}
-									className={clsx(
-										'relative text-sm font-medium w-8 h-6 flex items-center justify-center select-none',
-										elements[i] ? getElementText(elements[i]) : 'bg-zinc-700',
-										i === 0 && 'rounded-l-md',
-										i === picksCount - 1 && 'rounded-r-md',
-										fakeElements.length &&
-											fakeElements.length === i + 1 &&
-											'ring-2 ring-white z-10',
-										fakeElements.length && fakeElements.length < i + 1 && 'opacity-25'
-									)}
-									onMouseOver={() => setFakeElements(elements.slice(0, i + 1))}
-									onMouseOut={() => setFakeElements([])}
-								>
-									{i * 5}
-								</div>
-							))}
+							<ThemeToggle />
 						</div>
 					</div>
 
 					<div className="flex flex-row justify-between">
-						<div className="flex gap-3 items-center">
-							<div className="text-sm">Range:</div>
+						<div className="flex flex-row gap-6">
+							<div className="flex gap-2 flex-col">
+								<div className="text-sm font-medium">Range</div>
 
-							{ranges.map((x) => (
-								<button
-									className={twMerge(
-										clsx(
-											'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
-											x === range && 'bg-red-500'
-										)
-									)}
-									onClick={() => setRange((r) => (r !== x ? x : null))}
-								>
-									{x}
-								</button>
-							))}
+								<ButtonGroup>
+									{ranges.map((x) => (
+										<Button
+											key={x}
+											variant={
+												x === range
+													? 'destructive'
+													: 'secondary'
+											}
+											size="sm"
+											onClick={() =>
+												setRange((r) =>
+													r !== x ? x : null
+												)
+											}
+										>
+											{x}
+										</Button>
+									))}
+								</ButtonGroup>
+							</div>
+
+							<div className="flex gap-2 flex-col">
+								<div className="text-sm font-medium">
+									Support
+								</div>
+
+								<ButtonGroup>
+									{supports.map((x) => (
+										<Button
+											key={x}
+											variant={
+												x === support
+													? 'success'
+													: 'secondary'
+											}
+											size="sm"
+											onClick={() =>
+												setSupport((r) =>
+													r !== x ? x : null
+												)
+											}
+										>
+											{x}
+										</Button>
+									))}
+								</ButtonGroup>
+							</div>
 						</div>
 
-						<div>
-							<button
-								className={
-									'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium'
-								}
-								onClick={() => setElements([])}
-							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									strokeWidth={1.5}
-									stroke="currentColor"
-									className="w-5 h-5"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
-									/>
-								</svg>
-							</button>
-						</div>
+						<div className="flex flex-col items-end gap-2">
+							<div className="text-sm font-medium">
+								Picks Remaining: {picksCount - elements.length}
+							</div>
 
-						<div className="flex gap-3 items-center">
-							<div className="text-sm">Support:</div>
-
-							{supports.map((x) => (
-								<button
-									className={twMerge(
-										clsx(
-											'rounded-sm bg-gray-200 hover:bg-gray-300 text-black px-2 text-sm font-medium',
-											support === x && 'bg-green-500'
-										)
-									)}
-									onClick={() => setSupport((r) => (r !== x ? x : null))}
-								>
-									{x}
-								</button>
-							))}
+							<div className="flex items-center border rounded-md overflow-hidden divide-x">
+								{arrPicks.map((_, i) => (
+									<div
+										key={i}
+										className={cn(
+											'relative text-sm font-medium size-8 flex items-center justify-center select-none',
+											elements[i]
+												? getElementText(elements[i])
+												: 'bg-none',
+											fakeElements.length &&
+												fakeElements.length < i + 1 &&
+												'opacity-25'
+										)}
+										onMouseOver={() =>
+											setFakeElements(
+												elements.slice(0, i + 1)
+											)
+										}
+										onMouseOut={() => setFakeElements([])}
+									>
+										{i * 5}
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
 
@@ -170,7 +180,13 @@ function App() {
 						<div className="grid grid-cols-6">
 							{selectionRows.map((_, i) => (
 								<SectionRow
-									getTowers={(element) => towers[element].filter((x) => x.elements.length === i + 1)}
+									key={i}
+									row={i}
+									getTowers={(element) =>
+										towers[element].filter(
+											(x) => x.elements.length === i + 1
+										)
+									}
 								/>
 							))}
 						</div>
@@ -178,258 +194,32 @@ function App() {
 
 					<div className="flex items-center justify-between">
 						<div className="text-sm font-medium">
-							Built by{' '}
 							<a
 								href="https://nicksheffield.com"
 								target="_blank"
 								rel="noreferrer"
-								className="text-red-500"
+								className={cn(
+									buttonVariants({
+										variant: 'secondary',
+									}),
+									'text-indigo-500 bg-indigo-600/20 hover:bg-indigo-600/40'
+								)}
 							>
-								Nick
+								Built by Nick
 							</a>
 						</div>
-						<label className="text-sm font-medium flex items-center gap-2">
-							<input type="checkbox" checked={showOverlay} onChange={() => setShowOverlay((x) => !x)} />
+						<Label className="flex items-center gap-2">
+							<Checkbox
+								checked={showOverlay}
+								onCheckedChange={() =>
+									setShowOverlay((x) => !x)
+								}
+							/>
 							Explain prerequisites on hover
-						</label>
+						</Label>
 					</div>
 				</div>
 			</div>
 		</Context.Provider>
 	)
 }
-
-const shouldGlow = (hovered: Tower | null, tower: Tower) => {
-	if (hovered === null) return false
-
-	return (
-		hovered.elements.some((x) => tower.elements.includes(x)) ||
-		tower.elements.some((x) => hovered.elements.includes(x))
-	)
-}
-
-const TowerSelector = ({ tower }: { tower: Tower }) => {
-	const { elements, setElements, hovered, setHovered, range, support } = useContext(Context)
-
-	const isActive = tower.elements.reduce((acc, cur) => acc && elements.includes(cur), true)
-
-	const level = Math.min(
-		...elementNames.filter((x) => tower.elements.includes(x)).map((x) => elements.filter((y) => y === x).length)
-	)
-
-	const correctLevel = (level: number) => Math.min(level, 5 - tower.elements.length)
-
-	const increase = () => {
-		if (tower.elements.length === 1) {
-			if (elements.length >= picksCount) return
-			if (elements.filter((x) => x === tower.elements[0]).length >= 3) return
-			setElements((e) => [...e, tower.elements[0]])
-		} else {
-			const targetLevel = correctLevel(level) + 1
-			const maxLevel = correctLevel(5)
-			const elementsToAdd: ElementName[] = []
-
-			if (targetLevel > maxLevel) return
-
-			tower.elements.forEach((element) => {
-				let currentCount = elements.filter((x) => x === element).length
-
-				if (targetLevel - currentCount < 0) return
-				for (let i = 0; i < targetLevel - currentCount; i++) {
-					elementsToAdd.push(element)
-				}
-			})
-
-			if (elements.length + elementsToAdd.length > picksCount) return
-			setElements((e) => [...e, ...elementsToAdd])
-		}
-	}
-
-	const decrease = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-		e.preventDefault()
-
-		if (tower.elements.length === 1) {
-			setElements((e) => {
-				let lastIndex = e.lastIndexOf(tower.elements[0])
-				if (lastIndex === -1) return e
-				return [...e.slice(0, lastIndex), ...e.slice(lastIndex + 1)]
-			})
-		} else {
-			const activeTowers = Object.values(towers)
-				.flat()
-				.reduce<Tower[]>((list, t) => {
-					if (t === tower) return list
-					if (t.elements.reduce((acc, cur) => acc && elements.includes(cur), true)) {
-						return [...list, t]
-					}
-					return list
-				}, [])
-			console.log('activeTowers', activeTowers)
-		}
-	}
-
-	const willAdd = hovered && isUnlocked(tower, [...elements, ...hovered.elements]) && !isUnlocked(tower, elements)
-
-	return (
-		<div
-			className="flex flex-col items-center w-16 select-none transition-transform scale-100 hover:scale-105 cursor-pointer"
-			onClick={increase}
-			onContextMenu={decrease}
-			onMouseOver={() => setHovered(tower)}
-			onMouseOut={() => setHovered(null)}
-		>
-			<div className="text-xs font-medium whitespace-nowrap">{tower.name}</div>
-
-			<div
-				className={twMerge(
-					clsx(
-						'relative',
-						tower.elements.length === 1 ? 'rounded-full' : 'border-4 border-black',
-						tower.range === range && 'border-red-500',
-						tower.support === support && 'border-green-500',
-						tower.range === range && tower.support === support && 'ring-4 ring-red-500 border-green-500',
-						shouldGlow(hovered, tower) && tower !== hovered && 'glow',
-						willAdd && 'border-white'
-					)
-				)}
-			>
-				<img className={clsx(!isActive && 'saturate-0 opacity-30')} src={tower.image} data-tower={tower.name} />
-
-				{willAdd && (
-					<div className="absolute inset-0 flex justify-center items-center text-3xl font-bold text-white">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							strokeWidth={1.5}
-							stroke="currentColor"
-							className="w-6 h-6"
-						>
-							<path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-						</svg>
-					</div>
-				)}
-
-				<div className="absolute bottom-0 left-0 w-full flex justify-center text-3xl font-bold text-white">
-					<div
-						style={{
-							textShadow:
-								'-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000',
-						}}
-					>
-						{correctLevel(level) || ''}
-					</div>
-				</div>
-			</div>
-		</div>
-	)
-}
-
-const SectionRow = ({ getTowers }: { getTowers: (element: ElementName) => Tower[] }) => {
-	return (
-		<>
-			{(Object.keys(towers) as ElementName[]).map((element) => (
-				<div
-					key={element}
-					className={`flex flex-row items-start flex-wrap justify-center content-start gap-4 w-44 py-4 px-0 ${getBackgroundColor(
-						element
-					)}`}
-				>
-					{getTowers(element).map((tower) => (
-						<TowerSelector key={tower.name} tower={tower} />
-					))}
-				</div>
-			))}
-		</>
-	)
-}
-
-type Line = {
-	x1: number
-	y1: number
-	x2: number
-	y2: number
-	depth: number
-	color: string
-}
-
-const createLine = (el1: HTMLImageElement, el2: HTMLImageElement, depth: number, color: string) => {
-	let rect1 = el1.getBoundingClientRect()
-	let rect2 = el2.getBoundingClientRect()
-
-	return {
-		x1: rect1.x + rect1.width / 2,
-		y1: rect1.y + rect1.height / 2,
-		x2: rect2.x + rect2.width / 2,
-		y2: rect2.y + rect2.height / 2,
-		depth,
-		color,
-	}
-}
-
-const Overlay = () => {
-	const { hovered } = useContext(Context)
-
-	function getLines(tower: Tower, depth: number, lines: Line[] = []): Line[] {
-		let el = document.querySelector(`[data-tower="${tower.name}"]`) as HTMLImageElement
-		let parents = getTowerParents(tower)
-		let parentEls = parents.map((x) => document.querySelector(`[data-tower="${x.name}"]`) as HTMLImageElement)
-
-		for (let i = 0; i < parentEls.filter(Boolean).length; i++) {
-			const line = createLine(el, parentEls[i], depth, getElementStroke(parents[i].elements[0]))
-
-			if (!lines.find((x) => x.x1 === line.x1 && x.x2 === line.x2 && x.y1 === line.y1 && x.y2 === line.y2)) {
-				lines.push(line)
-			}
-
-			let parentTower = Object.values(towers)
-				.flat()
-				.find((x) => x.name === parentEls[i].dataset.tower)
-
-			if (parentTower) {
-				const parentTowerParents = getTowerParents(parentTower)
-
-				if (parentTowerParents.length > 0) {
-					getLines(parentTower, depth + 1, lines)
-				}
-			}
-		}
-
-		// let childTowers = Object.values(towers)
-		// 	.flat()
-		// 	.filter((x) => x.parents.includes(tower.name))
-
-		// for (let i = 0; i < childTowers.length; i++) {
-		// 	getLines(childTowers[i], lines)
-		// }
-
-		return lines
-	}
-
-	const lines: (Line | null)[] = hovered ? getLines(hovered, 0) : []
-
-	return (
-		<svg
-			className="fixed z-10 top-0 left-0 w-screen h-screen pointer-events-none fill-none bg-transparent"
-			viewBox={`0 0 ${window.innerWidth} ${window.innerHeight}`}
-		>
-			{lines.filter(isNotNull).map((line, i) => (
-				<line
-					key={i}
-					x1={line.x1}
-					x2={line.x2}
-					y1={line.y1}
-					y2={line.y2}
-					className={line.color}
-					strokeWidth={3}
-					// style={{ opacity: 1 - line.depth * 0.33 }}
-					// stroke="white"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-				/>
-			))}
-		</svg>
-	)
-}
-
-export default App

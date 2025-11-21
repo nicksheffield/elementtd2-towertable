@@ -1,66 +1,73 @@
-import Light from './assets/light/Light.webp'
-import AtomTower from './assets/light/Atom_Tower.webp'
-import LightningTower from './assets/light/Lightning_Tower.webp'
-import TrickeryTower from './assets/light/Trickery_Tower.webp'
-import AstralTower from './assets/light/Astral_Tower.webp'
-import LaserTower from './assets/light/Laser_Tower.webp'
-import NovaTower from './assets/light/Nova_Tower.webp'
-import RailgunTower from './assets/light/Railgun_Tower.webp'
-import SingularityTower from './assets/light/Singularity_Tower.webp'
+import Light from '@/assets/light/Light.webp'
+import AtomTower from '@/assets/light/Atom_Tower.webp'
+import LightningTower from '@/assets/light/Lightning_Tower.webp'
+import TrickeryTower from '@/assets/light/Trickery_Tower.webp'
+import AstralTower from '@/assets/light/Astral_Tower.webp'
+import LaserTower from '@/assets/light/Laser_Tower.webp'
+import NovaTower from '@/assets/light/Nova_Tower.webp'
+import RailgunTower from '@/assets/light/Railgun_Tower.webp'
+import SingularityTower from '@/assets/light/Singularity_Tower.webp'
 
-import Darkness from './assets/dark/Darkness.webp'
-import PoisonTower from './assets/dark/Poison_Tower.webp'
-import DiseaseTower from './assets/dark/Disease_Tower.webp'
-import RunicTower from './assets/dark/Runic_Tower.webp'
-import EtherealTower from './assets/dark/Ethereal_Tower.webp'
-import JinxTower from './assets/dark/Jinx_Tower.webp'
-import PlagueTower from './assets/dark/Plague_Tower.webp'
-import DoomTower from './assets/dark/Doom_Tower.webp'
-import PhantomZoneTower from './assets/dark/PhantomZone_Tower.webp'
+import Darkness from '@/assets/dark/Darkness.webp'
+import PoisonTower from '@/assets/dark/Poison_Tower.webp'
+import DiseaseTower from '@/assets/dark/Disease_Tower.webp'
+import RunicTower from '@/assets/dark/Runic_Tower.webp'
+import EtherealTower from '@/assets/dark/Ethereal_Tower.webp'
+import JinxTower from '@/assets/dark/Jinx_Tower.webp'
+import PlagueTower from '@/assets/dark/Plague_Tower.webp'
+import DoomTower from '@/assets/dark/Doom_Tower.webp'
+import PhantomZoneTower from '@/assets/dark/PhantomZone_Tower.webp'
 
-import Water from './assets/water/Water.webp'
-import VaporTower from './assets/water/Vapor_Tower.webp'
-import IceTower from './assets/water/Ice_Tower.webp'
-import WellTower from './assets/water/Well_Tower.webp'
-import FloodingTower from './assets/water/Flooding_Tower.webp'
-import WispTower from './assets/water/Wisp_Tower.webp'
-import WindstormTower from './assets/water/Windstorm_Tower.webp'
-import PolarTower from './assets/water/Polar_Tower.webp'
-import TsunamiTower from './assets/water/Tsunami_Tower.webp'
-import CrystalSpireTower from './assets/water/CrystalSpire_Tower.webp'
+import Water from '@/assets/water/Water.webp'
+import VaporTower from '@/assets/water/Vapor_Tower.webp'
+import IceTower from '@/assets/water/Ice_Tower.webp'
+import WellTower from '@/assets/water/Well_Tower.webp'
+import FloodingTower from '@/assets/water/Flooding_Tower.webp'
+import WispTower from '@/assets/water/Wisp_Tower.webp'
+import WindstormTower from '@/assets/water/Windstorm_Tower.webp'
+import PolarTower from '@/assets/water/Polar_Tower.webp'
+import TsunamiTower from '@/assets/water/Tsunami_Tower.webp'
+import CrystalSpireTower from '@/assets/water/CrystalSpire_Tower.webp'
 
-import Fire from './assets/fire/Fire.webp'
-import SolarTower from './assets/fire/Solar_Tower.webp'
-import InfernalTower from './assets/fire/Infernal_Tower.webp'
-import BlacksmithTower from './assets/fire/Blacksmith_Tower.webp'
-import FlamethrowerTower from './assets/fire/Flamethrower_Tower.webp'
-import HasteTower from './assets/fire/Haste_Tower.webp'
-import CorrosionTower from './assets/fire/Corrosion_Tower.webp'
-import ObeliskTower from './assets/fire/Obelisk_Tower.webp'
-import RageTower from './assets/fire/Rage_Tower.webp'
+import Fire from '@/assets/fire/Fire.webp'
+import SolarTower from '@/assets/fire/Solar_Tower.webp'
+import InfernalTower from '@/assets/fire/Infernal_Tower.webp'
+import BlacksmithTower from '@/assets/fire/Blacksmith_Tower.webp'
+import FlamethrowerTower from '@/assets/fire/Flamethrower_Tower.webp'
+import HasteTower from '@/assets/fire/Haste_Tower.webp'
+import CorrosionTower from '@/assets/fire/Corrosion_Tower.webp'
+import ObeliskTower from '@/assets/fire/Obelisk_Tower.webp'
+import RageTower from '@/assets/fire/Rage_Tower.webp'
 
-import Nature from './assets/nature/Nature.webp'
-import MushroomTower from './assets/nature/Mushroom_Tower.webp'
-import BloomTower from './assets/nature/Bloom_Tower.webp'
-import ImpulseTower from './assets/nature/Impulse_Tower.webp'
-import GolemTower from './assets/nature/Golem_Tower.webp'
-import RootTower from './assets/nature/Root_Tower.webp'
-import IncantationTower from './assets/nature/Incantation_Tower.webp'
-import ArchdruidTower from './assets/nature/Archdruid_Tower.webp'
-import TeslaTreeTower from './assets/nature/TeslaTree_Tower.webp'
-import LifeAltarTower from './assets/nature/LifeAltar_Tower.webp'
+import Nature from '@/assets/nature/Nature.webp'
+import MushroomTower from '@/assets/nature/Mushroom_Tower.webp'
+import BloomTower from '@/assets/nature/Bloom_Tower.webp'
+import ImpulseTower from '@/assets/nature/Impulse_Tower.webp'
+import GolemTower from '@/assets/nature/Golem_Tower.webp'
+import RootTower from '@/assets/nature/Root_Tower.webp'
+import IncantationTower from '@/assets/nature/Incantation_Tower.webp'
+import ArchdruidTower from '@/assets/nature/Archdruid_Tower.webp'
+import TeslaTreeTower from '@/assets/nature/TeslaTree_Tower.webp'
+import LifeAltarTower from '@/assets/nature/LifeAltar_Tower.webp'
 
-import Earth from './assets/earth/Earth.webp'
-import HowitzerTower from './assets/earth/Howitzer_Tower.webp'
-import GeyserTower from './assets/earth/Geyser_Tower.webp'
-import QuakeTower from './assets/earth/Quake_Tower.webp'
-import MoneyTower from './assets/earth/Money_Tower.webp'
-import MuckTower from './assets/earth/Muck_Tower.webp'
-import ShredderTower from './assets/earth/Shredder_Tower.webp'
-import NuclearReactorTower from './assets/earth/NuclearReactor_Tower.webp'
-import GravityCannonTower from './assets/earth/GravityCannon_Tower.webp'
+import Earth from '@/assets/earth/Earth.webp'
+import HowitzerTower from '@/assets/earth/Howitzer_Tower.webp'
+import GeyserTower from '@/assets/earth/Geyser_Tower.webp'
+import QuakeTower from '@/assets/earth/Quake_Tower.webp'
+import MoneyTower from '@/assets/earth/Money_Tower.webp'
+import MuckTower from '@/assets/earth/Muck_Tower.webp'
+import ShredderTower from '@/assets/earth/Shredder_Tower.webp'
+import NuclearReactorTower from '@/assets/earth/NuclearReactor_Tower.webp'
+import GravityCannonTower from '@/assets/earth/GravityCannon_Tower.webp'
 
-export const elementNames = ['light', 'dark', 'water', 'fire', 'nature', 'earth'] as const
+export const elementNames = [
+	'light',
+	'dark',
+	'water',
+	'fire',
+	'nature',
+	'earth',
+] as const
 export type ElementName = (typeof elementNames)[number]
 
 export const ranges = [750, 900, 1150, 1500] as const
@@ -99,16 +106,16 @@ export const getElementStroke = (element: ElementName) =>
 
 export const getBackgroundColor = (element: ElementName) =>
 	element === 'light'
-		? 'bg-yellow-100/20'
+		? 'bg-yellow-200/50 dark:bg-yellow-200/20'
 		: element === 'dark'
-		? 'bg-purple-800/20'
+		? 'bg-purple-800/50 dark:bg-purple-800/20'
 		: element === 'water'
-		? 'bg-blue-500/20'
+		? 'bg-blue-500/50 dark:bg-blue-500/20'
 		: element === 'fire'
-		? 'bg-red-500/20'
+		? 'bg-red-500/50 dark:bg-red-500/20'
 		: element === 'nature'
-		? 'bg-green-500/20'
-		: 'bg-yellow-800/20'
+		? 'bg-green-500/50 dark:bg-green-500/20'
+		: 'bg-yellow-700/50 dark:bg-yellow-700/20'
 
 export type Tower = {
 	name: string
@@ -490,11 +497,26 @@ export const getTowerParents = (tower: Tower) => {
 	return Object.values(towers)
 		.flat()
 		.filter((x) => x.elements.length === tower.elements.length - 1)
-		.filter((x) => x.elements.reduce((pass, el) => pass && tower.elements.includes(el), true))
+		.filter((x) =>
+			x.elements.reduce(
+				(pass, el) => pass && tower.elements.includes(el),
+				true
+			)
+		)
 }
 
 export const convertElementNameToSymbols = (x: ElementName) =>
-	x === 'dark' ? 'd' : x === 'earth' ? 'e' : x === 'fire' ? 'f' : x === 'light' ? 'l' : x === 'nature' ? 'n' : 'w'
+	x === 'dark'
+		? 'd'
+		: x === 'earth'
+		? 'e'
+		: x === 'fire'
+		? 'f'
+		: x === 'light'
+		? 'l'
+		: x === 'nature'
+		? 'n'
+		: 'w'
 
 export const convertSymbolToElementName = (x: string): ElementName | null =>
 	x === 'd'
