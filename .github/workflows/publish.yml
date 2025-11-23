@@ -79,7 +79,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build with Vite
-        run: pnpm run build
+        run: pnpm run build -- --base=/elementtd2-towertable/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
